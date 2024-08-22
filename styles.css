@@ -89,9 +89,9 @@ section {
 }
 
 .span{
-    text-align: center;
     font-size: 18px;
     font-weight: bold; /* Negrito */
+    text-align: center;
     text-decoration: underline; /* Sublinhado */
 }
 
