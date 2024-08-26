@@ -26,7 +26,7 @@ document
   .addEventListener("click", async function () {
     const input = document.getElementById("fileInput");
     const messageText = document.getElementById("userInput").value;
-
+    console.log(input);
     if (input.files && input.files.length > 0) {
       try {
         const numbers = await processFile(input.files[0]);
@@ -128,3 +128,38 @@ function sendSms(number, message) {
       section.appendChild(newMessage);
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const passwordModal = document.getElementById("passwordModal");
+  const confirmPasswordButton = document.getElementById(
+    "confirmPasswordButton"
+  );
+  const passwordInput = document.getElementById("passwordInput");
+
+  // Mostrar o modal de senha ao carregar a página
+  passwordModal.style.display = "block";
+
+  // Função para verificar a senha e fechar o modal se estiver correta
+  function checkPassword() {
+    if (passwordInput.value === "kennedyUnico") {
+      passwordModal.style.display = "none";
+    } else {
+      alert("Senha incorreta. Tente novamente.");
+      passwordInput.value = ""; // Limpa o campo de senha
+      passwordInput.focus(); // Foca no campo de senha
+    }
+  }
+
+  // Verificar a senha quando o botão "Confirmar" for clicado
+  confirmPasswordButton.addEventListener("click", checkPassword);
+
+  // Permitir a entrada de senha por "Enter"
+  passwordInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      checkPassword();
+    }
+  });
+
+  // Remover o fechamento ao clicar fora do modal e o botão de fechar
+  // Fazemos isso ao não adicionar os manipuladores de eventos para essas ações.
+});

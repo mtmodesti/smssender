@@ -102,3 +102,42 @@ button{
     font-size: 16px; /* Tamanho da fonte do botão */
     cursor: pointer; /* Muda o cursor ao passar sobre o botão */
 }
+
+/* Estilos do Modal de Senha */
+#passwordModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#passwordModal h2 {
+    margin: 0 0 15px;
+}
+
+#passwordInput {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#confirmPasswordButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+#confirmPasswordButton:hover {
+    background-color: #45a049;
+}

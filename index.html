@@ -15,7 +15,7 @@
     
         <span class="span">Selecione o arquivo .txt</span>
 
-        <input type="file" accept=".txt" id="fileInput">
+        <input class="input" type="file" accept=".txt" id="fileInput">
     
         <script type="module" src="main.js"></script>
 
@@ -27,14 +27,23 @@
 
         <section></section>
 
-           <!-- Modal -->
-    <div id="noFileModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <p>Nenhum arquivo selecionado.</p>
+        <!-- Modal de senha -->
+        <div id="passwordModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closePasswordModal">&times;</span>
+                <h2>Insira a senha</h2>
+                <input type="password" id="passwordInput" placeholder="Digite a senha">
+                <button id="confirmPasswordButton">Confirmar</button>
+            </div>
         </div>
-    </div>
 
+        <!-- Modal de arquivo não selecionado -->
+        <div id="noFileModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <p>Nenhum arquivo selecionado.</p>
+            </div>
+        </div>
     </div>
 </body>
 </html>
