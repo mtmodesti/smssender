@@ -20,65 +20,6 @@ function showModal(message) {
   modal.style.display = "block";
 }
 
-// Ação do botão "Enviar mensagens"
-document
-  .getElementById("showFileContent")
-  .addEventListener("click", async function () {
-    const input = document.getElementById("fileInput");
-    const messageText = document.getElementById("userInput").value;
-    console.log(input);
-    if (input.files && input.files.length > 0) {
-      try {
-        const numbers = await processFile(input.files[0]);
-        // Envia o SMS para cada número
-        numbers.forEach((number) => {
-          sendSms(number, messageText);
-        });
-      } catch (error) {
-        console.error("Erro ao processar o arquivo:", error);
-      }
-    } else {
-      showModal("Nenhum arquivo selecionado.");
-    }
-  });
-
-// Fechar o modal ao clicar no botão de fechar
-document.querySelector(".close-button").addEventListener("click", function () {
-  const modal = document.getElementById("noFileModal");
-  modal.style.display = "none";
-});
-
-// Fechar o modal se o usuário clicar fora dele
-window.addEventListener("click", function (event) {
-  const modal = document.getElementById("noFileModal");
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
-});
-
-//Kennedy 5511958816853
-const kennedy = "5511958816853";
-const marcelo = "5511941760181";
-
-// Selecionar elementos
-const textArea = document.getElementById("userInput");
-const sendButton = document.getElementById("showFileContent");
-
-// Função para verificar se o textarea está vazio
-function checkTextArea() {
-  if (textArea.value.trim() === "") {
-    sendButton.disabled = true; // Desabilita o botão se o textarea estiver vazio
-  } else {
-    sendButton.disabled = false; // Habilita o botão se houver texto
-  }
-}
-
-// Verificar o textarea ao carregar a página
-checkTextArea();
-
-// Adicionar evento de input ao textarea para monitorar mudanças
-textArea.addEventListener("input", checkTextArea);
-
 // Função para enviar SMS
 function sendSms(number, message) {
   // Limpa o conteúdo da seção antes de enviar novas mensagens
@@ -112,13 +53,21 @@ function sendSms(number, message) {
   fetch("https://1v53gn.api.infobip.com/sms/2/text/advanced", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
-      // Adiciona a mensagem ao section
-      const section = document.querySelector("section");
-      const newMessage = document.createElement("p");
-      newMessage.textContent = `Exito para enviar ao número: ${number}`;
-      newMessage.classList.add("success");
-      section.appendChild(newMessage);
+      if (
+        result?.requestError?.serviceException?.messageId === "UNAUTHORIZED"
+      ) {
+        const section = document.querySelector("section");
+        const newMessage = document.createElement("p");
+        newMessage.textContent = `Erro para enviar ao número: ${number}`;
+        newMessage.classList.add("error");
+        section.appendChild(newMessage);
+      } else {
+        const section = document.querySelector("section");
+        const newMessage = document.createElement("p");
+        newMessage.textContent = `Exito para enviar ao número: ${number}`;
+        newMessage.classList.add("success");
+        section.appendChild(newMessage);
+      }
     })
     .catch((error) => {
       const section = document.querySelector("section");
@@ -129,37 +78,85 @@ function sendSms(number, message) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const passwordModal = document.getElementById("passwordModal");
-  const confirmPasswordButton = document.getElementById(
-    "confirmPasswordButton"
-  );
-  const passwordInput = document.getElementById("passwordInput");
+// Selecionar elementos
+const textArea = document.getElementById("userInput");
+const sendButton = document.getElementById("showFileContent");
 
-  // Mostrar o modal de senha ao carregar a página
-  passwordModal.style.display = "block";
-
-  // Função para verificar a senha e fechar o modal se estiver correta
-  function checkPassword() {
-    if (passwordInput.value === "kennedyUnico") {
-      passwordModal.style.display = "none";
-    } else {
-      alert("Senha incorreta. Tente novamente.");
-      passwordInput.value = ""; // Limpa o campo de senha
-      passwordInput.focus(); // Foca no campo de senha
-    }
+// Função para verificar se o textarea está vazio
+function checkTextArea() {
+  if (textArea.value.trim() === "") {
+    sendButton.disabled = true; // Desabilita o botão se o textarea estiver vazio
+  } else {
+    sendButton.disabled = false; // Habilita o botão se houver texto
   }
+}
 
-  // Verificar a senha quando o botão "Confirmar" for clicado
-  confirmPasswordButton.addEventListener("click", checkPassword);
+// Verificar o textarea ao carregar a página
+checkTextArea();
 
-  // Permitir a entrada de senha por "Enter"
-  passwordInput.addEventListener("keypress", function (event) {
+// Adicionar evento de input ao textarea para monitorar mudanças
+textArea.addEventListener("input", checkTextArea);
+
+// Função para verificar a senha e processar o arquivo se a senha estiver correta
+function checkPasswordAndProcess() {
+  const passwordInput = document.getElementById("passwordInput");
+  const passwordModal = document.getElementById("passwordModal");
+
+  if (passwordInput.value === "kennedyUnico") {
+    passwordModal.style.display = "none"; // Fecha o modal
+    // Processar o arquivo e enviar SMS
+    const input = document.getElementById("fileInput");
+    const messageText = document.getElementById("userInput").value;
+
+    if (input.files && input.files.length > 0) {
+      processFile(input.files[0])
+        .then((numbers) => {
+          numbers.forEach((number) => {
+            sendSms(number, messageText);
+          });
+        })
+        .catch((error) => {
+          console.error("Erro ao processar o arquivo:", error);
+        });
+    } else {
+      showModal("Nenhum arquivo selecionado.");
+    }
+  } else {
+    alert("Senha incorreta. Tente novamente.");
+    passwordInput.value = ""; // Limpa o campo de senha
+    passwordInput.focus(); // Foca no campo de senha
+  }
+}
+
+// Mostrar o modal de senha ao clicar no botão "Enviar mensagens"
+sendButton.addEventListener("click", function () {
+  document.getElementById("passwordModal").style.display = "block";
+});
+
+// Verificar a senha quando o botão "Confirmar" for clicado
+document
+  .getElementById("confirmPasswordButton")
+  .addEventListener("click", checkPasswordAndProcess);
+
+// Permitir a entrada de senha por "Enter"
+document
+  .getElementById("passwordInput")
+  .addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
-      checkPassword();
+      checkPasswordAndProcess();
     }
   });
 
-  // Remover o fechamento ao clicar fora do modal e o botão de fechar
-  // Fazemos isso ao não adicionar os manipuladores de eventos para essas ações.
+// Fechar o modal de arquivo não selecionado ao clicar no botão de fechar
+document.querySelector(".close-button").addEventListener("click", function () {
+  const modal = document.getElementById("noFileModal");
+  modal.style.display = "none";
+});
+
+// Fechar o modal se o usuário clicar fora dele
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("noFileModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
 });
