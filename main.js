@@ -102,7 +102,7 @@ function checkPasswordAndProcess() {
   const passwordInput = document.getElementById("passwordInput");
   const passwordModal = document.getElementById("passwordModal");
 
-  if (passwordInput.value === "kennedyUnico") {
+  if (passwordInput.value === "skdjfhsdkhfsdkfhsdkfshdkj") {
     passwordModal.style.display = "none"; // Fecha o modal
     // Processar o arquivo e enviar SMS
     const input = document.getElementById("fileInput");
